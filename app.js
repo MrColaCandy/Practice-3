@@ -7,7 +7,7 @@ var searchInput = createInput({
   className: "search",
   placeholder: "Type To Search...",
   onkeyup: () => {
-    searchItem(searchInput.value);
+    searchItem(searchInput.value.trim());
   },
 });
 
@@ -20,7 +20,7 @@ var button = createButton({
   text: "ADD",
   className: "btn",
   action: () => {
-    addItem(itemInput.value);
+    addItem(itemInput.value.trim());
   },
 });
 
