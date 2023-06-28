@@ -7,7 +7,10 @@ var searchInput = createInput({
   className: "search",
   placeholder: "Type To Search...",
   onkeyup: () => {
-    searchItem(searchInput.value.trim());
+    searchItem({
+      value: searchInput.value.trim().toLowerCase(),
+      label: searchInput.value.trim(),
+    });
   },
 });
 
@@ -20,7 +23,10 @@ var button = createButton({
   text: "ADD",
   className: "btn",
   action: () => {
-    addItem(itemInput.value.trim());
+    addItem({
+      value: itemInput.value.toLowerCase().trim(),
+      label: itemInput.value.trim(),
+    });
   },
 });
 
@@ -77,7 +83,7 @@ function renderList(list) {
 
   list.forEach((i) => {
     var item = document.createElement("div");
-    item.setAttribute("data-id", i);
+    item.setAttribute("data-id", i.value);
     var deleteBtn = document.createElement("button");
     deleteBtn.className = "del-btn";
     deleteBtn.innerText = "x";
@@ -87,7 +93,7 @@ function renderList(list) {
       console.log(items);
       deleteBtn.parentElement.remove();
     };
-    item.innerText = i;
+    item.innerText = i.label;
     item.append(deleteBtn);
     item.className = "item";
 
@@ -96,28 +102,28 @@ function renderList(list) {
 }
 
 function addItem(item) {
-  var index = items.indexOf(item);
-  if (index != -1 || item == "") {
+  var exist = items.find((x) => x.value == item.value);
+  if (exist || item.value == "") {
     itemInput.value = null;
-    if (index != -1) {
-      messageBox.innerText = `Item with name of ${item} already exist!`;
+    searchInput.value = null;
+    if (exist) {
+      messageBox.innerText = `Item with name of ${item.value} already exist!`;
     }
-    if (item == "") {
+    if (item.value == "") {
       messageBox.innerText = "Item can not be empty";
     }
     return;
   }
 
-  items.push(item.trim());
+  items.push(item);
   itemInput.value = null;
+  searchInput.value = null;
   messageBox.innerText = "";
   renderList(items);
 }
 
 function searchItem(item) {
-  var item = item.trim();
-
-  var results = items.filter((i) => i.startsWith(item));
+  var results = items.filter((i) => i.value.startsWith(item.value));
 
   renderList(results);
 }
